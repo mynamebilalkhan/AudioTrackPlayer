@@ -1,3 +1,4 @@
+import Slider from '@react-native-community/slider';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useAudioPlayer } from '../../context/AudioPlayerContext';
 
@@ -11,7 +12,7 @@ const words = [
 ];
 
 export default function QuranScreen() {
-  const { play, pause } = useAudioPlayer();
+  const { play, pause, currentTime, duration, seekTo  } = useAudioPlayer();
 
   return (
     <View style={{ padding: 20 }}>
@@ -25,8 +26,21 @@ export default function QuranScreen() {
         </TouchableOpacity>
       ))}
       <TouchableOpacity onPress={pause}>
-        <Text style={{ fontSize: 20, color: 'red' }}>Pause</Text>
+        <Text style={{ fontSize: 20, color: 'blue' }}>Pause</Text>
       </TouchableOpacity>
+      {/* Seek Slider */}
+      <Slider
+        style={{ width: '100%', height: 40, marginTop: 20 }}
+        minimumValue={0}
+        maximumValue={duration || 1}
+        value={currentTime}
+        onSlidingComplete={(value) => seekTo(value)}
+        minimumTrackTintColor="#1FB28A"
+        maximumTrackTintColor="#d3d3d3"
+        thumbTintColor="#1FB28A"
+      />
+      <Text>Current Time: {currentTime.toFixed(1)}s</Text>
+      <Text>Duration: {duration.toFixed(1)}s</Text>
     </View>
   );
 }

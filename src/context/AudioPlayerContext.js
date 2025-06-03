@@ -1,22 +1,30 @@
 import { useAudioPlayer as useExpoAudioPlayer } from 'expo-audio';
-import { createContext, useContext, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 const AudioPlayerContext = createContext(null);
 
 export const AudioPlayerProvider = ({ children }) => {
-  // You can initialize with empty URI, and replace it on play
   const player = useExpoAudioPlayer({ uri: '' });
 
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
   useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(player.currentTime); // in seconds
+      setDuration(player.duration);       // in seconds
+    }, 500); // update every 500ms
+
     return () => {
-      player.remove(); // Cleanup on unmount
+      clearInterval(interval);
+      player.remove();
     };
   }, []);
 
   const play = async (url) => {
     try {
-      await player.replace({ uri: url }); // Load new URL
-      await player.play();                // Play it
+      await player.replace({ uri: url });
+      await player.play();
     } catch (err) {
       console.error('Error playing audio:', err);
     }
@@ -38,8 +46,16 @@ export const AudioPlayerProvider = ({ children }) => {
     }
   };
 
+  const seekTo = async (seconds) => {
+  try {
+    await player.seekTo(seconds);
+  } catch (err) {
+    console.error('Error seeking audio:', err);
+  }
+};
+
   return (
-    <AudioPlayerContext.Provider value={{ play, pause, stop }}>
+    <AudioPlayerContext.Provider value={{ play, pause, stop, currentTime, duration, seekTo }}>
       {children}
     </AudioPlayerContext.Provider>
   );
