@@ -46,6 +46,14 @@ export const AudioPlayerProvider = ({ children }) => {
     }
   };
 
+  const resume = async () => {
+    try {
+      await player.play(); // resumes from current position
+    } catch (err) {
+      console.error('Error resuming audio:', err);
+    }
+  };
+
   const seekTo = async (seconds) => {
   try {
     await player.seekTo(seconds);
@@ -55,7 +63,7 @@ export const AudioPlayerProvider = ({ children }) => {
 };
 
   return (
-    <AudioPlayerContext.Provider value={{ play, pause, stop, currentTime, duration, seekTo }}>
+    <AudioPlayerContext.Provider value={{ play, pause, stop, currentTime, duration, resume, seekTo }}>
       {children}
     </AudioPlayerContext.Provider>
   );

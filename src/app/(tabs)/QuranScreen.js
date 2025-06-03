@@ -12,7 +12,7 @@ const words = [
 ];
 
 export default function QuranScreen() {
-  const { play, pause, currentTime, duration, seekTo  } = useAudioPlayer();
+  const { play, pause, currentTime, duration, seekTo, resume  } = useAudioPlayer();
 
   return (
     <View style={{ padding: 20 }}>
@@ -27,6 +27,12 @@ export default function QuranScreen() {
       ))}
       <TouchableOpacity onPress={pause}>
         <Text style={{ fontSize: 20, color: 'blue' }}>Pause</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={resume}>
+        <Text style={{ fontSize: 20, color: 'green' }}>Resume</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => seekTo(4.5)}>
+        <Text style={{ fontSize: 20, color: 'yellow' }}>Second Verse</Text>
       </TouchableOpacity>
       {/* Seek Slider */}
       <Slider
